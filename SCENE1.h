@@ -21,15 +21,15 @@ public:
     virtual bool init();
 
     CREATE_FUNC(SCENE1);
-    void go(Ref* pSender);
+    // void go(Ref* pSender);
 
-    void reload(Ref *pSender); //fct de replacement de scene lors d echec
+    void reload1(Ref* pSender); //fct de replacement de scene lors d echec
     void play(Ref* pSender); //fct de passage vers scene lorsque le joueuer arrive a la porte
-    
-  
+
+
     bool onContactBegin(cocos2d::PhysicsContact& contact);
-       
-        
+
+
 };
 
 
