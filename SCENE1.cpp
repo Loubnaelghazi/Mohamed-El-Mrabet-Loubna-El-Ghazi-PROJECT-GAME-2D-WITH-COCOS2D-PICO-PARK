@@ -1,9 +1,9 @@
-
 #include "SCENE1.h"
 #include "AudioEngine.h"
-
-
-
+#include "Gameover.h"
+#include "HelloWorldScene.h"
+#include "physics/CCPhysicsBody.h"
+#include "physics/CCPhysicsJoint.h"
 
 USING_NS_CC;
 
@@ -49,27 +49,25 @@ bool SCENE1::init()
 
     ///////////////////  add Sprite
 
-    auto pinfo = AutoPolygon::generatePolygon("Player.png");
-    auto player = Sprite::create(pinfo);
-    player->setAnchorPoint(Vec2(0.5f, 0.5f));
+    auto player = Sprite::create("Player.png");
+    player->setAnchorPoint(Vec2(0.5, 0.5));
     player->setPosition(Vec2(50, 60));
     player->setScale(0.3); //scale dyal player
     player->setName("player");
     this->addChild(player, 2);
     //  creating physique for player
 
-   // auto physicsBody1 = PhysicsBody::createBox(player->getContentSize() , PhysicsMaterial(1000.0f, 0.5f, 0.5f));
     auto physicsBody1 = PhysicsBody::createBox(player->getContentSize(), PhysicsMaterial(1000.0f, 0.5f, 0.5f));
-    // physicsBody1->setGravityEnable(true);
-    // physicsBody1->setDynamic(true);
+    physicsBody1->setDynamic(true);
     physicsBody1->setContactTestBitmask(1);
-    // physicsBody1->setCategoryBitmask(1);
+    physicsBody1->setRotationEnable(false);
+    physicsBody1->setCollisionBitmask(1);
     player->setPhysicsBody(physicsBody1);
-    //physicsBody1->applyForce(Vec2(100, 100));
-    //physicsBody1->setLinearDamping(0.2f);
+    Vec2 force = Vec2(0, -physicsBody1->getMass() * 9.8f);
+    physicsBody1->applyForce(force);
 
 
-  //////////////////////create the background that iclude PICO PARK
+    //////////////////////create the background that iclude PICO PARK
 
     auto background = Sprite::create("background.png");
     background->setAnchorPoint(Vec2(0, 0));
@@ -78,7 +76,7 @@ bool SCENE1::init()
     this->addChild(background, 0);
     ///////////////////////////////////// creating the floor1(THe LAND)
 
-    auto floor = Sprite::create("land-15.png");
+    auto* floor = Sprite::create("land-15.png");
     floor->setAnchorPoint(Vec2(0, 0));
     floor->setPosition(Vec2(0, 0));
     floor->setScale(0.125);
@@ -99,7 +97,7 @@ bool SCENE1::init()
 
     ///////////////////////////////////// creating the floor2(THe LAND)
 
-    auto floor2 = Sprite::create("land-14.png");
+    auto* floor2 = Sprite::create("land-14.png");
     floor2->setAnchorPoint(Vec2(1, 0));
     floor2->setPosition(Vec2(480, 0));
     floor2->setScale(0.125);
@@ -120,31 +118,53 @@ bool SCENE1::init()
 
     //////////////////////////////////////  create obstacle1
 
-    auto obstacle1 = Sprite::create("obstacle1.png");
+    auto* obstacle1 = Sprite::create("obstacle1-10.png");
     obstacle1->setAnchorPoint(Vec2(0, 0));
     obstacle1->setPosition(Vec2(150, 40));
     obstacle1->setScale(0.125);
     this->addChild(obstacle1, 1);
 
-    auto physicsBody_obstacle1 = PhysicsBody::createBox(obstacle1->getContentSize(), PhysicsMaterial(1500.0f, 0.1f, 0.9f));
+    auto physicsBody_obstacle1 = PhysicsBody::createBox(obstacle1->getContentSize(), PhysicsMaterial(0.1f, 0.5f, 0.5f));
     physicsBody_obstacle1->setDynamic(false);
     obstacle1->setPhysicsBody(physicsBody_obstacle1);
 
     //////////////////////////////
 
-    auto pit_1 = Sprite::create("obstacle1.png");
+    auto* pit_1 = Sprite::create("floor.png");
     pit_1->setAnchorPoint(Vec2(0, 0));
-    pit_1->setPosition(Vec2(330, -100));
+    pit_1->setPosition(Vec2(0, -150));
     pit_1->setScale(0.125);
     this->addChild(pit_1, 1);
 
-    auto physicsBody_pit_1 = PhysicsBody::createCircle(pit_1->getContentSize().width / 2, PhysicsMaterial(1.0f, 1.0f, 1.0f));
+    auto physicsBody_pit_1 = PhysicsBody::createBox(pit_1->getContentSize(), PhysicsMaterial(1.0f, 1.0f, 1.0f));
     physicsBody_pit_1->setContactTestBitmask(1);
     physicsBody_pit_1->setDynamic(false);
     pit_1->setPhysicsBody(physicsBody_pit_1);
 
     /////////////////////////////
 
+
+    /////////////////////////////
+
+
+    auto spriteNode = cocos2d::Node::create();
+
+    // Add the node to the scene
+   // this->addChild(spriteNode);
+
+
+    auto* acc1 = MoveBy::create(0.1 * winSize.width, Point(-winSize.width * 4, 0));
+    auto* acc2 = MoveBy::create(0.1 * winSize.width, Point(-winSize.width * 4, 0));
+    auto* acc3 = MoveBy::create(0.1 * winSize.width, Point(-winSize.width * 4, 0));
+    auto* acc4 = MoveBy::create(0.1 * winSize.width, Point(-winSize.width * 4, 0));
+
+    obstacle1->runAction(acc2);
+    floor->runAction(acc3);
+    floor2->runAction(acc4);
+
+
+
+    ///////////////////////////////
 
    // Create a keyboard event listener
     auto keyboardListener = EventListenerKeyboard::create();
@@ -157,18 +177,23 @@ bool SCENE1::init()
     {
 
         if (KeyCode == EventKeyboard::KeyCode::KEY_UP_ARROW) {
-            auto action1 = JumpBy::create(0.7f, Vec2(80, 50), 60.0f, 1);
+            auto action1 = JumpBy::create(0.57f, Vec2(80, 40), 60.0f, 1);
+            auto easeAction = EaseOut::create(action1, 2.0f);
             player->runAction(action1);
+            cocos2d::AudioEngine::preload("jump.mp3"); //upload de notre music mp3 en v4 de cocos
+            cocos2d::AudioEngine::play2d("jump.mp3");
+
         }
         if (KeyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW) {
             auto jump = JumpBy::create(0.5f, Vec2(50, 50), 50.0f, 1);
-            MoveBy* moveAction = MoveBy::create(2, Vec2(70, 0));
+            MoveBy* moveAction = MoveBy::create(1.2, Vec2(70, 0));
             RepeatForever* repeatAction = RepeatForever::create(moveAction);
             player->runAction(repeatAction);
+
         }
         if (KeyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW) {
             auto jump = JumpBy::create(0.5f, Vec2(50, 50), 50.0f, 1);
-            MoveBy* moveAction = MoveBy::create(2, Vec2(-70, 0));
+            MoveBy* moveAction = MoveBy::create(1.2, Vec2(-70, 0));
             RepeatForever* repeatAction = RepeatForever::create(moveAction);
             player->runAction(repeatAction);
 
@@ -188,6 +213,7 @@ bool SCENE1::init()
 
     };
 
+
     ////////////////////////////////////
 
 
@@ -195,7 +221,7 @@ bool SCENE1::init()
     auto spriteBody = PhysicsBody::createBox(player->getContentSize(), PhysicsMaterial(0, 1, 0));
     spriteBody->setCollisionBitmask(1);
     spriteBody->setCollisionBitmask(true);
-    // void reload(cocos2d::Ref* pSender);
+
 
     auto contactlistener = EventListenerPhysicsContact::create();
     contactlistener->onContactBegin = CC_CALLBACK_1(SCENE1::onContactBegin, this);
@@ -204,8 +230,11 @@ bool SCENE1::init()
     ////////////////////////////
     auto contactListener = EventListenerPhysicsContact::create();
     contactListener->onContactBegin = [](PhysicsContact& contact) {
-        auto scene = SCENE1::createScene();
-        Director::getInstance()->replaceScene(TransitionFade::create(0.3, scene));
+
+        auto scene = Gameover::createScene();
+        Director::getInstance()->pushScene(TransitionFade::create(0.3, scene));
+
+        void reload1(cocos2d::Ref * pSender);
         cocos2d::AudioEngine::preload("gameover.mp3"); //upload de notre music mp3 en v4 de cocos
         cocos2d::AudioEngine::play2d("gameover.mp3");
 
@@ -218,14 +247,12 @@ bool SCENE1::init()
     };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
     ////////////////////////
+    ////////////////////////////
+
     return true;
 }
 
 
-void SCENE1::reload(cocos2d::Ref* pSender) {
-    auto scene = SCENE1::createScene();
-    Director::getInstance()->replaceScene(TransitionFade::create(0.2, scene));
-}
 
 
 bool SCENE1::onContactBegin(cocos2d::PhysicsContact& contact) {
@@ -233,25 +260,22 @@ bool SCENE1::onContactBegin(cocos2d::PhysicsContact& contact) {
     PhysicsBody* y = contact.getShapeB()->getBody();
     if (1 == x->getCollisionBitmask() && 2 == y->getCollisionBitmask() || 2 == x->getCollisionBitmask() && 1 == y->getCollisionBitmask()) {
 
-        void reload(cocos2d::Ref * pSender);
+        void reload1(cocos2d::Ref * pSender);
+
+
     }
     return true;
 }
 
 
 
-    /////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 
 
- //   void SCENE1::reload(cocos2d::Ref* pSender) {
-   //     auto scene = SCENE1::createScene();
-     //   Director::getInstance()->replaceScene(TransitionFade::create(0.4, scene)); //game over et refaire la scene
-    //}
+void SCENE1::reload1(cocos2d::Ref* pSender) {
+    auto scene = Gameover::createScene();
+    Director::getInstance()->replaceScene(TransitionFade::create(0.4, scene)); //game over et refaire la scene
+}
 
-//void SCENE1::go(cocos2d::Ref* PSender) {
-  //  Director::getInstance()->popScene(); //revenier a la scene hello world
-//}
 
-   
-//}
-    
+///////////////////////////////////////////////////////////////////
