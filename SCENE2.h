@@ -2,6 +2,7 @@
 #ifndef SCENE2_H
 #define SCENE2_SCENE_H
 #include "cocos2d.h"
+#include "Gameover.h"
 using namespace cocos2d;
 
 
