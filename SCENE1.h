@@ -8,6 +8,7 @@
 #include "physics/CCPhysicsContact.h"
 #include "Box2D/Box2D.h"
 #include "Box2D/Dynamics/b2WorldCallbacks.h"
+#include "SCENE2.h"
 USING_NS_CC;
 using namespace cocos2d;
 
@@ -21,11 +22,9 @@ public:
     virtual bool init();
 
     CREATE_FUNC(SCENE1);
-    // void go(Ref* pSender);
 
     void reload1(Ref* pSender); //fct de replacement de scene lors d echec
     void play(Ref* pSender); //fct de passage vers scene lorsque le joueuer arrive a la porte
-
 
     bool onContactBegin(cocos2d::PhysicsContact& contact);
 
