@@ -24,18 +24,19 @@ bool Gameover::init()
     auto  origin = Director::getInstance()->getVisibleOrigin();
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
+    ///////////////// Background
 
-    auto* gameover = Sprite::create("gameover.png");
-    gameover->setPosition(Point((visibleSize.width / 2), (visibleSize.height / 2)));
+    Gameover::gameover = Sprite::create("gameover.png");
+    gameover->setPosition(Point((visibleSize.width / 2) , (visibleSize.height / 2)));
     gameover->setScale(0.125);
     this->addChild(gameover);
 
     auto* menu2 = Menu::create();
     menu2->setPosition(Point(0, 0));
-    this->addChild(menu2);
+    this->addChild(menu2 );
 
 
-    ///ajout des elements:
+    ///ajout des elements: Restart button and MainMenu button
 
     auto* restart = Sprite::create("restart.png");
     auto* restart_bu = Sprite::create("restartS.png");
@@ -43,8 +44,8 @@ bool Gameover::init()
     menu_restart->setNormalImage(restart);
     menu_restart->setSelectedImage(restart_bu);
     menu_restart->setCallback(CC_CALLBACK_1(Gameover::reload, this)); //reload du game on click
-    menu_restart->setPosition(Point((visibleSize.width / 2), (visibleSize.height / 2) + 30));
-    menu2->addChild(menu_restart, 3);
+    menu_restart->setPosition(Point((visibleSize.width / 2), (visibleSize.height / 2)+30));
+    menu2->addChild(menu_restart , 3);
 
 
     auto main_menu = Sprite::create("mainmenu.png");
@@ -52,22 +53,16 @@ bool Gameover::init()
     MenuItemImage* menu_main = MenuItemImage::create();
     menu_main->setNormalImage(main_menu);
     menu_main->setSelectedImage(main_menu_bu);
-    menu_main->setPosition(Point((visibleSize.width / 2), (visibleSize.height / 2) - 30));
+    menu_main->setPosition(Point((visibleSize.width / 2), (visibleSize.height / 2)-30));
     menu_main->setCallback(CC_CALLBACK_1(Gameover::reload2, this)); // du game on click
-    menu2->addChild(menu_main, 4);
-
-
-
-
-
-    //   menu_restart->setPosition(Point(visibleSize.width / 2, (visibleSize.height / 3) * 2));
-     //  menu_main->setPosition(Point(visibleSize.width / 2, (visibleSize.height / 3) * 3));
+    menu2->addChild(menu_main , 4);
 
 
     return true;
 }
 
 void Gameover::reload(cocos2d::Ref* pSender) {
+
     auto scene = SCENE1::createScene();
     Director::getInstance()->replaceScene(TransitionFade::create(0.4, scene)); //game over et refaire la scene
 }
