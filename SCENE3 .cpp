@@ -408,7 +408,7 @@ bool SCENE3::init()
 
     auto* floor8 = Sprite::create("ground-07.png");
     floor8->setAnchorPoint(Vec2(0, 0));
-    floor8->setPosition(Vec2(1194, 47));
+    floor8->setPosition(Vec2(1205, 47));
     floor8->setScale(0.125);
     this->addChild(floor8, 3);
 
@@ -538,7 +538,7 @@ bool SCENE3::init()
     /////////////////////////////////////////////////////////////////////////
     auto* dontpush21 = Sprite::create("button.png");
     dontpush21->setAnchorPoint(Vec2(0, 0));
-    dontpush21->setPosition(Vec2(1510, 40));
+    dontpush21->setPosition(Vec2(1520, 40));
     dontpush21->setScale(0.30);
     this->addChild(dontpush21, 1);
 
@@ -551,14 +551,14 @@ bool SCENE3::init()
     // 
     auto* dontpushs12 = Sprite::create("dont_push.png");
     dontpushs12->setAnchorPoint(Vec2(0, 0));
-    dontpushs12->setPosition(Vec2(1512, 60));
+    dontpushs12->setPosition(Vec2(1520, 60));
     dontpushs12->setScale(0.128);
     this->addChild(dontpushs12, 1);
 
     auto physicsBody_dontpushs12 = PhysicsBody::createBox(dontpushs12->getContentSize(), PhysicsMaterial(0.1f, 0.5f, 0.5f));
     physicsBody_dontpushs12->setDynamic(false);
-    physicsBody_dontpushs12->setCollisionBitmask(1);
-    physicsBody_dontpushs12->setContactTestBitmask(1);
+    physicsBody_dontpushs12->setCollisionBitmask(0);
+    physicsBody_dontpushs12->setContactTestBitmask(0);
     dontpushs12->setPhysicsBody(physicsBody_dontpushs12);
 
     //////////////////////////////////////////////////////////////////////
@@ -675,9 +675,18 @@ bool SCENE3::init()
         PhysicsBody* y = contact.getShapeB()->getBody();
 
         if (1== x->getCollisionBitmask() && 5== y->getCollisionBitmask() || (5 == x->getCollisionBitmask() && 1 == y->getCollisionBitmask())) {
-          MoveBy* moveact0 = MoveBy::create(5.0, Vec2(0, -150));
-            x->getNode()->runAction(moveact0);
-           y->getNode()->runAction(moveact0);
+            if (x->getNode()->getScale() == 0.125 || x->getNode()->getScale() == 0.130)
+            {
+                MoveBy* moveact0 = MoveBy::create(4.0, Vec2(0, -150));
+                x->getNode()->runAction(moveact0);
+            }
+            if (y->getNode()->getScale() == 0.125|| y->getNode()->getScale() == 0.130)
+            {
+                MoveBy* moveact0 = MoveBy::create(4.0, Vec2(0, -150));
+                y->getNode()->runAction(moveact0);
+            }
+            
+  
           
             if (1 == x->getCollisionBitmask() && (1 == y->getCollisionBitmask())) {
                
@@ -736,6 +745,25 @@ bool SCENE3::init()
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
     return true;
 }
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     
