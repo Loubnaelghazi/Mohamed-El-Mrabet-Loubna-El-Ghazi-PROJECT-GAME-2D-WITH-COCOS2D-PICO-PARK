@@ -1,5 +1,6 @@
 
 
+
 #include "cocos2d.h"
 #include "SCENE2.h"
 #include "SCENE1.h"
@@ -15,7 +16,7 @@ Scene* SCENE2::createScene()
     auto scene = Scene::createWithPhysics();
     auto layer = SCENE2::create();
     scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-    scene->getPhysicsWorld()->setDebugDrawMask(1);
+    scene->getPhysicsWorld()->setDebugDrawMask(0);
     scene->addChild(layer);
 
     return scene;
@@ -640,14 +641,12 @@ bool SCENE2::init()
             cocos2d::AudioEngine::play2d("win.mp3");
         }
         ////////keycntact
-        int i = 0;
         if (2 == x->getCollisionBitmask() && 4 == y->getCollisionBitmask() || 4 == x->getCollisionBitmask() && 2 == y->getCollisionBitmask()) {
             key->setOpacity(0);
-            i = 1;
         }
         //////door contact
         if (2 == x->getCollisionBitmask() && 5 == y->getCollisionBitmask() || 5 == x->getCollisionBitmask() && 2 == y->getCollisionBitmask()) {
-            if (i == 1)
+            if (key->getOpacity()==0)
             {
                 auto scene2 = SCENE3::createScene();
                 Director::getInstance()->pushScene(TransitionSplitCols::create(0.4, scene2));
@@ -674,3 +673,4 @@ bool SCENE2::init()
 
     return true;
 }
+
