@@ -63,7 +63,7 @@ bool HelloWorld::init()
   ///Fonction pour aller au niveau 1 quand on click sur PLAY
 
 void HelloWorld::play(cocos2d::Ref* PSender) {
-    auto scene1 = SCENE2::createScene();
+    auto scene1 = SCENE1::createScene();
     Director::getInstance()->pushScene(TransitionSplitCols::create(1, scene1)); //la scene qu on veut y switch vers
     cocos2d::AudioEngine::stopAll(); //stoper la music quand on clique sur play
 }
