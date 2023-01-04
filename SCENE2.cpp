@@ -667,8 +667,7 @@ bool SCENE2::init()
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
 
-    cocos2d::AudioEngine::preload("SCENE2.mp3"); //upload de notre music mp3 en v4 de cocos
-    cocos2d::AudioEngine::play2d("SCENE2.mp3", true);    //PLAY MUSIC //true whwnever t7lat hello world
+    
 
 
     return true;
