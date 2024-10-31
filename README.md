@@ -35,8 +35,6 @@ Watch a brief video showcasing our game [here](https://github.com/Loubnaelghazi/
 
 ## License
 
-Strictly forbidden to take or use the source code without permission and proper attribution:
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). Strictly forbidden to take or use the source code without permission and proper attribution. 
-
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
